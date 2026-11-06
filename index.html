@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TI-Process Hub | CERTUS</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        certus: {
+                            navy: '#002B49',
+                            blue: '#005691',
+                            cyan: '#00A3E0',
+                            light: '#F4F7F9'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
+
+    <!-- HEADER / NAVIGATION BAR -->
+    <header class="bg-certus-navy text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('dashboard')">
+                    <div class="bg-certus-cyan text-certus-navy font-black text-xl px-2.5 py-1 rounded shadow">
+                        CERTUS
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold leading-tight">TI-Process Hub</h1>
+                        <p class="text-xs text-gray-300">Gestión Operativa de TI</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs (Desktop) -->
+                <nav class="hidden md:flex space-x-1">
+                    <button id="nav-dashboard" onclick="switchTab('dashboard')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition text-white bg-certus-blue">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+                    </button>
+                    <button id="nav-auth" onclick="switchTab('auth')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition text-gray-300 hover:text-white hover:bg-certus-blue/50">
+                        <i data-lucide="user-check" class="w-4 h-4"></i> Autenticación / Rol
+                    </button>
+                    <button id="nav-documents" onclick="switchTab('documents')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition text-gray-300 hover:text-white hover:bg-certus-blue/50">
+                        <i data-lucide="folder-plus" class="w-4 h-4"></i> Gestor
+                    </button>
+                    <button id="nav-search" onclick="switchTab('search')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition text-gray-300 hover:text-white hover:bg-certus-blue/50">
+                        <i data-lucide="search" class="w-4 h-4"></i> Búsqueda
+                    </button>
+                    <button id="nav-viewer" onclick="switchTab('viewer')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition text-gray-300 hover:text-white hover:bg-certus-blue/50">
+                        <i data-lucide="file-text" class="w-4 h-4"></i> Lector
+                    </button>
+                    <button id="nav-versions" onclick="switchTab('versions')" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition text-gray-300 hover:text-white hover:bg-certus-blue/50">
+                        <i data-lucide="git-branch" class="w-4 h-4"></i> Historial
+                    </button>
+                </nav>
+
+                <!-- Current Role Status Badge -->
+                <div class="flex items-center gap-2">
+                    <span id="role-badge" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Admin TI
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sub-header Breadcrumb / Banner -->
+        <div class="bg-certus-blue text-xs py-1 px-4 text-center text-blue-100 border-t border-blue-400/30">
+            Escuela CERTUS &bull; Área Académica / Equipo de TI &bull; Repositorio Oficial
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ================= PESTAÑA 1: DASHBOARD ================= -->
+        <section id="tab-dashboard" class="tab-content space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-certus-navy">Panel Control Operativo TI</h2>
+                    <p class="text-sm text-gray-600">Centralización y estandarización de guías y procedimientos informáticos.</p>
+                </div>
+                <button onclick="switchTab('documents')" class="bg-certus-cyan hover:bg-sky-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition flex items-center gap-2 shadow">
+                    <i data-lucide="plus" class="w-4 h-4"></i> Nuevo Documento
+                </button>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="p-3 bg-blue-50 text-certus-blue rounded-lg">
+                        <i data-lucide="files" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-gray-900" id="stat-total">4</div>
+                        <div class="text-xs text-gray-500 font-medium">Documentos Vigentes</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
+                        <i data-lucide="clock" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-emerald-600">-60%</div>
+                        <div class="text-xs text-gray-500 font-medium">Tiempo de Búsqueda</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="p-3 bg-amber-50 text-amber-600 rounded-lg">
+                        <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-gray-900">v2.1</div>
+                        <div class="text-xs text-gray-500 font-medium">Última Actualización</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="p-3 bg-purple-50 text-purple-600 rounded-lg">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-gray-900">100%</div>
+                        <div class="text-xs text-gray-500 font-medium">Cumplimiento Estándar</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accesos Rápidos por Categoría -->
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="layers" class="w-5 h-5 text-certus-blue"></i> Módulos y Categorías Operativas
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div onclick="filterByCategory('Soporte Técnico')" class="cursor-pointer p-4 rounded-lg border border-gray-100 bg-gray-50 hover:bg-blue-50/50 hover:border-blue-200 transition group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="p-2 rounded bg-blue-100 text-certus-blue"><i data-lucide="wrench" class="w-5 h-5"></i></span>
+                            <span class="text-xs bg-gray-200 text-gray-700 font-bold px-2 py-0.5 rounded-full">2 Guías</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800 group-hover:text-certus-blue">Soporte Técnico</h4>
+                        <p class="text-xs text-gray-500 mt-1">Mantenimiento de PC/Laptops y atención de aulas.</p>
+                    </div>
+
+                    <div onclick="filterByCategory('Redes')" class="cursor-pointer p-4 rounded-lg border border-gray-100 bg-gray-50 hover:bg-blue-50/50 hover:border-blue-200 transition group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="p-2 rounded bg-emerald-100 text-emerald-600"><i data-lucide="wifi" class="w-5 h-5"></i></span>
+                            <span class="text-xs bg-gray-200 text-gray-700 font-bold px-2 py-0.5 rounded-full">1 Guía</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800 group-hover:text-certus-blue">Redes & Telecom</h4>
+                        <p class="text-xs text-gray-500 mt-1">Configuración de Access Points y VLANs Campus.</p>
+                    </div>
+
+                    <div onclick="filterByCategory('Infraestructura')" class="cursor-pointer p-4 rounded-lg border border-gray-100 bg-gray-50 hover:bg-blue-50/50 hover:border-blue-200 transition group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="p-2 rounded bg-amber-100 text-amber-600"><i data-lucide="server" class="w-5 h-5"></i></span>
+                            <span class="text-xs bg-gray-200 text-gray-700 font-bold px-2 py-0.5 rounded-full">1 Guía</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800 group-hover:text-certus-blue">Infraestructura</h4>
+                        <p class="text-xs text-gray-500 mt-1">Respaldos de servidores y políticas Cloud/AWS.</p>
+                    </div>
+
+                    <div onclick="filterByCategory('Seguridad')" class="cursor-pointer p-4 rounded-lg border border-gray-100 bg-gray-50 hover:bg-blue-50/50 hover:border-blue-200 transition group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="p-2 rounded bg-purple-100 text-purple-600"><i data-lucide="shield" class="w-5 h-5"></i></span>
+                            <span class="text-xs bg-gray-200 text-gray-700 font-bold px-2 py-0.5 rounded-full">Próximamente</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800 group-hover:text-certus-blue">Seguridad TI</h4>
+                        <p class="text-xs text-gray-500 mt-1">Políticas de accesos y credenciales institucionales.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PESTAÑA 2: AUTENTICACIÓN Y ROLES ================= -->
+        <section id="tab-auth" class="tab-content hidden space-y-6">
+            <div class="border-b pb-4">
+                <h2 class="text-2xl font-bold text-certus-navy">Módulo de Autenticación y Control de Accesos</h2>
+                <p class="text-sm text-gray-600">Simulación del control de permisos por roles institucionales.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Selector de Rol Activo -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-gray-900 border-b pb-2">Seleccionar Rol de Sesión</h3>
+                    <p class="text-xs text-gray-500">Cambia entre los roles disponibles para probar los permisos de la interfaz (Gestión/Creación vs Solo Consulta).</p>
+
+                    <div class="space-y-3">
+                        <label onclick="setRole('admin')" class="flex items-start gap-3 p-3 rounded-lg border border-blue-200 bg-blue-50/50 cursor-pointer hover:bg-blue-50 transition">
+                            <input type="radio" name="user-role" value="admin" checked class="mt-1 text-certus-blue focus:ring-certus-cyan">
+                            <div>
+                                <span class="font-bold text-sm text-gray-900 flex items-center gap-2">
+                                    Administrador TI <span class="bg-blue-100 text-certus-blue text-xs px-2 py-0.5 rounded font-normal">Acceso Total</span>
+                                </span>
+                                <p class="text-xs text-gray-600 mt-0.5">Permite publicar, editar, categorizar y modificar el estado de los documentos.</p>
+                            </div>
+                        </label>
+
+                        <label onclick="setRole('consultant')" class="flex items-start gap-3 p-3 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-50 transition">
+                            <input type="radio" name="user-role" value="consultant" class="mt-1 text-certus-blue focus:ring-certus-cyan">
+                            <div>
+                                <span class="font-bold text-sm text-gray-900 flex items-center gap-2">
+                                    Consultor / Técnico TI <span class="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded font-normal">Solo Consulta</span>
+                                </span>
+                                <p class="text-xs text-gray-600 mt-0.5">Permite únicamente buscar, filtrar y visualizar los manuales vigentes.</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="pt-4 border-t text-xs text-gray-500">
+                        <strong>Integrantes del Equipo (Grupo 6):</strong>
+                        <ul class="list-disc ml-5 mt-1 space-y-0.5">
+                            <li>Natsumi Zapata Osorio (Líder)</li>
+                            <li>Marco Vega Prado / Maruan Quezada (Backend)</li>
+                            <li>Arnol Ramos Chipana (UI/UX)</li>
+                            <li>Gabriel Tueros Cueva (Pruebas)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Credenciales Simuladas -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-gray-900 border-b pb-2">Estado de Autenticación</h3>
+                    
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 text-xs space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Usuario Activo:</span>
+                            <span class="font-bold text-gray-800" id="auth-user-name">Natsumi Zapata Osorio</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Correo Institucional:</span>
+                            <span class="font-mono text-gray-700">n.zapata@certus.edu.pe</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Sede Registrada:</span>
+                            <span class="text-gray-700">Campus Principal CERTUS</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Permisos Activos:</span>
+                            <span class="font-bold text-emerald-600" id="auth-perm-text">Lectura, Escritura y Gestión</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 flex gap-2">
+                        <i data-lucide="info" class="w-4 h-4 text-amber-600 shrink-0"></i>
+                        <span>Los cambios de rol aplican en tiempo real en las pestañas de <strong>Gestor</strong> y <strong>Búsqueda</strong>.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PESTAÑA 3: GESTOR DE DOCUMENTOS ================= -->
+        <section id="tab-documents" class="tab-content hidden space-y-6">
+            <div class="border-b pb-4">
+                <h2 class="text-2xl font-bold text-certus-navy">Gestor de Documentación de TI</h2>
+                <p class="text-sm text-gray-600">Registro, categorización y carga de manuales procedimentales.</p>
+            </div>
+
+            <!-- Lock Banner if Consultant -->
+            <div id="admin-lock-banner" class="hidden bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl text-sm flex items-center gap-3">
+                <i data-lucide="lock" class="w-5 h-5 text-red-600 shrink-0"></i>
+                <div>
+                    <strong>Acceso Restringido:</strong> Tu rol actual es <em>Consultor/Técnico TI</em>. Solo los <strong>Administradores TI</strong> pueden registrar nuevos manuales. Cambia de rol en la pestaña de Autenticación.
+                </div>
+            </div>
+
+            <!-- Form Container -->
+            <div id="doc-form-container" class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <form id="add-doc-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Título del Documento *</label>
+                            <input type="text" id="doc-title" required placeholder="Ej: Manual de Configuración Mikrotik Router..." class="w-full text-sm p-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-certus-cyan focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Categoría Operativa *</label>
+                            <select id="doc-category" required class="w-full text-sm p-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-certus-cyan focus:outline-none">
+                                <option value="Soporte Técnico">Soporte Técnico</option>
+                                <option value="Redes">Redes & Telecomunicaciones</option>
+                                <option value="Infraestructura">Infraestructura & Servidores</option>
+                                <option value="Seguridad">Seguridad TI</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Versión Inicial</label>
+                            <input type="text" id="doc-version" value="v1.0" class="w-full text-sm p-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-certus-cyan focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Estado del Documento</label>
+                            <select id="doc-status" class="w-full text-sm p-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-certus-cyan focus:outline-none">
+                                <option value="Publicado">Publicado (Oficial)</option>
+                                <option value="En Revisión">En Revisión</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Etiquetas (Separadas por comas)</label>
+                            <input type="text" id="doc-tags" placeholder="ej: Wi-Fi, Campus, WPA3" class="w-full text-sm p-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-certus-cyan focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Contenido Técnico / Instrucciones *</label>
+                        <textarea id="doc-content" rows="4" required placeholder="Redacta los pasos del procedimiento operativo..." class="w-full text-sm p-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-certus-cyan focus:outline-none font-mono"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="reset" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-50 transition">Limpiar Limpiar</button>
+                        <button type="submit" class="px-5 py-2 bg-certus-blue hover:bg-certus-navy text-white rounded-lg text-sm font-medium transition shadow flex items-center gap-2">
+                            <i data-lucide="save" class="w-4 h-4"></i> Guardar y Publicar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= PESTAÑA 4: MOTOR DE BÚSQUEDA Y FILTROS ================= -->
+        <section id="tab-search" class="tab-content hidden space-y-6">
+            <div class="border-b pb-4">
+                <h2 class="text-2xl font-bold text-certus-navy">Motor de Búsqueda de Procesos TI</h2>
+                <p class="text-sm text-gray-600">Localiza rápidamente manuales por palabras clave, área y estado.</p>
+            </div>
+
+            <!-- Search Inputs -->
+            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="relative md:col-span-1">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3.5 text-gray-400"></i>
+                    <input type="text" id="search-keyword" oninput="applyFilters()" placeholder="Buscar por título o palabras clave..." class="w-full text-sm pl-9 pr-3 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-certus-cyan focus:outline-none">
+                </div>
+
+                <div>
+                    <select id="search-category" onchange="applyFilters()" class="w-full text-sm py-2.5 px-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-certus-cyan focus:outline-none">
+                        <option value="ALL">Todas las Categorías</option>
+                        <option value="Soporte Técnico">Soporte Técnico</option>
+                        <option value="Redes">Redes & Telecomunicaciones</option>
+                        <option value="Infraestructura">Infraestructura</option>
+                    </select>
+                </div>
+
+                <div>
+                    <select id="search-status" onchange="applyFilters()" class="w-full text-sm py-2.5 px-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-certus-cyan focus:outline-none">
+                        <option value="ALL">Todos los Estados</option>
+                        <option value="Publicado">Publicado</option>
+                        <option value="En Revisión">En Revisión</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Documents Grid Result -->
+            <div id="documents-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dynamically populated by renderDocuments() -->
+            </div>
+        </section>
+
+        <!-- ================= PESTAÑA 5: VISUALIZADOR DE PROCESOS ================= -->
+        <section id="tab-viewer" class="tab-content hidden space-y-6">
+            <div class="border-b pb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                <div>
+                    <h2 class="text-2xl font-bold text-certus-navy">Visualizador Interactivo de Documentos</h2>
+                    <p class="text-sm text-gray-600">Lector directo de procedimientos sin necesidad de descarga previa.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="switchViewerSubTab('doc')" id="subtab-btn-doc" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-certus-blue text-white shadow">
+                        Texto Normativo
+                    </button>
+                    <button onclick="switchViewerSubTab('flow')" id="subtab-btn-flow" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">
+                        Diagrama de Flujo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Viewer Card -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                <!-- Document Header -->
+                <div class="bg-gray-50 border-b p-6 flex flex-col md:flex-row justify-between md:items-center gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span id="view-doc-category" class="text-xs font-bold bg-blue-100 text-certus-blue px-2.5 py-0.5 rounded-full">Categoría</span>
+                            <span id="view-doc-version" class="text-xs bg-gray-200 text-gray-700 font-mono px-2 py-0.5 rounded">v1.0</span>
+                        </div>
+                        <h3 id="view-doc-title" class="text-xl font-bold text-gray-900">Selecciona un documento para visualizar</h3>
+                        <p id="view-doc-author" class="text-xs text-gray-500 mt-1">Responsable: --</p>
+                    </div>
+
+                    <button onclick="window.print()" class="self-start md:self-auto px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg text-xs font-semibold flex items-center gap-2 shadow-sm">
+                        <i data-lucide="printer" class="w-4 h-4"></i> Imprimir Guía
+                    </button>
+                </div>
+
+                <!-- View Sub-Tab: Document Text -->
+                <div id="viewer-subtab-doc" class="p-6 space-y-4">
+                    <div class="prose max-w-none text-sm text-gray-800 leading-relaxed font-mono bg-gray-50 p-4 rounded-lg border border-gray-200 whitespace-pre-line" id="view-doc-body">
+                        Por favor dirígete a la pestaña de "Búsqueda" o "Dashboard" y haz clic en "Ver Manual" en cualquier documento.
+                    </div>
+                </div>
+
+                <!-- View Sub-Tab: Diagram Flowchart -->
+                <div id="viewer-subtab-flow" class="p-6 hidden space-y-4">
+                    <h4 class="text-sm font-bold text-gray-700 uppercase">Esquema del Flujo de Trabajo Operativo</h4>
+                    <div class="p-6 bg-slate-900 text-white rounded-xl flex flex-col items-center justify-center space-y-4 text-center font-mono text-xs">
+                        <div class="border border-cyan-400 bg-cyan-950/80 px-4 py-2 rounded-lg text-cyan-300 font-bold shadow">
+                            [INICIO] Recepción de Requerimiento TI
+                        </div>
+                        <div class="w-0.5 h-6 bg-cyan-400"></div>
+                        <div class="border border-slate-700 bg-slate-800 px-4 py-2 rounded-lg text-gray-200">
+                            Validación de Credenciales y Protocolo de Seguridad
+                        </div>
+                        <div class="w-0.5 h-6 bg-cyan-400"></div>
+                        <div class="border border-amber-500/50 bg-amber-950/60 px-4 py-2 rounded-lg text-amber-300 font-bold">
+                            ¿Requiere Configuración Especial?
+                        </div>
+                        <div class="w-0.5 h-6 bg-cyan-400"></div>
+                        <div class="border border-emerald-500 bg-emerald-950/80 px-4 py-2 rounded-lg text-emerald-300 font-bold shadow">
+                            [FIN] Aplicación del Procedimiento y Registro en Sistema
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PESTAÑA 6: CONTROL DE VERSIONES ================= -->
+        <section id="tab-versions" class="tab-content hidden space-y-6">
+            <div class="border-b pb-4">
+                <h2 class="text-2xl font-bold text-certus-navy">Historial y Control de Versiones</h2>
+                <p class="text-sm text-gray-600">Registro de auditoría de modificaciones y responsables técnicos.</p>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-gray-100 border-b border-gray-200 text-xs font-bold text-gray-700 uppercase">
+                            <th class="p-3.5">Documento</th>
+                            <th class="p-3.5">Versión</th>
+                            <th class="p-3.5">Fecha</th>
+                            <th class="p-3.5">Responsable</th>
+                            <th class="p-3.5">Descripción del Cambio</th>
+                        </tr>
+                    </thead>
+                    <tbody id="versions-table-body" class="divide-y divide-gray-100 text-xs">
+                        <!-- Populated by renderVersions() -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-certus-navy text-white py-6 border-t border-gray-700 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-gray-400 space-y-2">
+            <p>© 2026 Escuela de Educación Superior CERTUS — Área Académica / Equipo de TI (Grupo 6)</p>
+            <p>TI-Process Hub — Proyecto de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT)</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // State Management
+        let currentRole = 'admin'; // 'admin' | 'consultant'
+        let selectedDocId = 1;
+
+        // Mock Database of CERTUS Real Institutional Documents
+        let documents = [
+            {
+                id: 1,
+                title: 'Mantenimiento y Formateo de Laptops Docentes CERTUS',
+                category: 'Soporte Técnico',
+                version: 'v2.1',
+                status: 'Publicado',
+                author: 'Marco Vega Prado',
+                date: '2026-10-15',
+                tags: ['Laptops', 'Docentes', 'Windows 11', 'Laboratorio'],
+                content: `1. OBJETIVO: Estandarizar la instalación del sistema operativo y herramientas educativas en equipos docentes.
+2. PRERREQUISITOS: USB Booteable con Imagen Oficial CERTUS 2026.
+3. PASOS OPERATIVOS:
+   a) Reiniciar el equipo e ingresar al BIOS con la tecla F2 / F12.
+   b) Desactivar Secure Boot temporalmente.
+   c) Iniciar desde el instalador USB y seleccionar partición "CERTUS_OS".
+   d) Ejecutar el script automatizado certus_setup.bat tras finalizar el primer reinicio.
+4. VERIFICACIÓN: Comprobar conexión a la red de dominio certus.edu.pe.`
+            },
+            {
+                id: 2,
+                title: 'Configuración de Access Points y Red Wi-Fi Campus',
+                category: 'Redes',
+                version: 'v1.5',
+                status: 'Publicado',
+                author: 'Natsumi Zapata Osorio',
+                date: '2026-09-28',
+                tags: ['Wi-Fi', 'Redes', 'Access Point', 'WPA3'],
+                content: `1. RESUMEN: Parámetros de redes inalámbricas para sedes institucionales.
+2. CONFIGURACIÓN VLAN:
+   - SSID Estudiantes: VLAN 20 (Red Restringida / Filtro Web)
+   - SSID Administrativo: VLAN 10 (WPA3 Enterprise)
+3. PASOS DE DESPLIEGUE:
+   a) Conectar AP al puerto PoE correspondiente del Switch Core.
+   b) Acceder a la consola del controlador en 192.168.10.254.
+   c) Aplicar perfil de seguridad CERTUS_SEC_2026.
+4. PRUEBAS: Medir potencia de señal (-65dBm objetivo en aulas).`
+            },
+            {
+                id: 3,
+                title: 'Protocolo de Respaldos e Infraestructura de Servidores',
+                category: 'Infraestructura',
+                version: 'v1.0',
+                status: 'Publicado',
+                author: 'Maruan Quezada VIlchez',
+                date: '2026-10-02',
+                tags: ['AWS', 'Backups', 'Servidores', 'S3'],
+                content: `1. ALCANCE: Servidores de Base de Datos y Sistemas Académicos.
+2. FRECUENCIA: Backup incremental diario a las 23:00 hrs. Full Backup el primer domingo de cada mes.
+3. RUTA DE ALMACENAMIENTO:
+   - Local: /mnt/storage_backups/
+   - Cloud: AWS S3 Bucket (certus-ti-backups-secure)
+4. PROCEDIMIENTO DE RESTAURACIÓN:
+   a) Verificar checksum del archivo .tar.gz.
+   b) Ejecutar restaurar_bd.sh --file <nombre_archivo>.`
+            },
+            {
+                id: 4,
+                title: 'Atención de Incidencias en Aulas de Cómputo',
+                category: 'Soporte Técnico',
+                version: 'v1.0',
+                status: 'En Revisión',
+                author: 'Gabriel Tueros Cueva',
+                date: '2026-10-20',
+                tags: ['Aulas', 'Incidencias', 'Mesa de Ayuda'],
+                content: `1. PROCEDIMIENTO DE NIVEL 1:
+   a) Recepción del ticket de reporte del docente vía Mesa de Ayuda.
+   b) Tiempo máximo de respuesta en aula: 10 minutos.
+   c) Verificar conectividad física de cable de red y proyector.
+2. ESCALAMIENTO: Si el problema persiste > 15 min, asignar a Nivel 2 y proveer equipo de reemplazo temporal.`
+            }
+        ];
+
+        // Init App
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderDocuments(documents);
+            renderVersions();
+            selectDocument(1);
+        });
+
+        // Tab Switcher SPA Logic
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show selected tab content
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+
+            // Reset navbar active styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-certus-blue', 'text-white');
+                btn.classList.add('text-gray-300');
+            });
+
+            // Set active navbar styling
+            const activeNavBtn = document.getElementById(`nav-${tabId}`);
+            if (activeNavBtn) {
+                activeNavBtn.classList.add('bg-certus-blue', 'text-white');
+                activeNavBtn.classList.remove('text-gray-300');
+            }
+        }
+
+        // Role Switching Logic
+        function setRole(role) {
+            currentRole = role;
+            const badge = document.getElementById('role-badge');
+            const authName = document.getElementById('auth-user-name');
+            const authPerm = document.getElementById('auth-perm-text');
+            const lockBanner = document.getElementById('admin-lock-banner');
+            const formContainer = document.getElementById('doc-form-container');
+
+            if (role === 'admin') {
+                badge.className = "px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5";
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Admin TI`;
+                authName.textContent = "Natsumi Zapata Osorio";
+                authPerm.textContent = "Lectura, Escritura y Gestión";
+                
+                lockBanner.classList.add('hidden');
+                formContainer.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                badge.className = "px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1.5";
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> Consultor TI`;
+                authName.textContent = "Técnico Consultor CERTUS";
+                authPerm.textContent = "Solo Consulta de Documentos";
+
+                lockBanner.classList.remove('hidden');
+                formContainer.classList.add('opacity-50', 'pointer-events-none');
+            }
+
+            // Re-render documents list to update delete buttons visibility
+            applyFilters();
+        }
+
+        // Document Form Submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            if (currentRole !== 'admin') return;
+
+            const title = document.getElementById('doc-title').value;
+            const category = document.getElementById('doc-category').value;
+            const version = document.getElementById('doc-version').value || 'v1.0';
+            const status = document.getElementById('doc-status').value;
+            const tagsInput = document.getElementById('doc-tags').value;
+            const content = document.getElementById('doc-content').value;
+
+            const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()) : ['TI'];
+
+            const newDoc = {
+                id: documents.length + 1,
+                title,
+                category,
+                version,
+                status,
+                author: 'Natsumi Zapata Osorio',
+                date: new Date().toISOString().split('T')[0],
+                tags,
+                content
+            };
+
+            documents.unshift(newDoc);
+            
+            // Update stats & lists
+            document.getElementById('stat-total').textContent = documents.length;
+            renderDocuments(documents);
+            renderVersions();
+            
+            document.getElementById('add-doc-form').reset();
+            alert('¡Documento registrado correctamente en el repositorio TI-Process Hub!');
+            switchTab('search');
+        }
+
+        // Render Document Cards
+        function renderDocuments(docsList) {
+            const grid = document.getElementById('documents-grid');
+            grid.innerHTML = '';
+
+            if (docsList.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-2 p-8 text-center text-gray-500 bg-white rounded-xl border">
+                        No se encontraron manuales que coincidan con el filtro aplicado.
+                    </div>
+                `;
+                return;
+            }
+
+            docsList.forEach(doc => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:border-certus-cyan transition flex flex-col justify-between";
+
+                const tagBadges = doc.tags.map(t => `<span class="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded">${t}</span>`).join(' ');
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${
+                                doc.category === 'Redes' ? 'bg-emerald-100 text-emerald-700' :
+                                doc.category === 'Infraestructura' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-certus-blue'
+                            }">
+                                ${doc.category}
+                            </span>
+                            <span class="text-xs font-mono text-gray-400">${doc.version}</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 text-base mb-1">${doc.title}</h4>
+                        <p class="text-xs text-gray-500 mb-3">Actualizado: ${doc.date} &bull; Autor: ${doc.author}</p>
+                        <div class="flex flex-wrap gap-1 mb-4">${tagBadges}</div>
+                    </div>
+
+                    <div class="pt-3 border-t flex items-center justify-between">
+                        <button onclick="selectDocument(${doc.id}); switchTab('viewer')" class="text-xs font-bold text-certus-blue hover:text-certus-navy flex items-center gap-1">
+                            Ver Manual Completo <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                        </button>
+                        ${currentRole === 'admin' ? `
+                            <button onclick="deleteDoc(${doc.id})" class="text-xs text-red-500 hover:text-red-700">Eliminar</button>
+                        ` : ''}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Filters Engine
+        function applyFilters() {
+            const keyword = document.getElementById('search-keyword').value.toLowerCase();
+            const category = document.getElementById('search-category').value;
+            const status = document.getElementById('search-status').value;
+
+            const filtered = documents.filter(doc => {
+                const matchKeyword = doc.title.toLowerCase().includes(keyword) || doc.tags.some(t => t.toLowerCase().includes(keyword));
+                const matchCategory = category === 'ALL' || doc.category === category;
+                const matchStatus = status === 'ALL' || doc.status === status;
+                return matchKeyword && matchCategory && matchStatus;
+            });
+
+            renderDocuments(filtered);
+        }
+
+        function filterByCategory(cat) {
+            document.getElementById('search-category').value = cat;
+            switchTab('search');
+            applyFilters();
+        }
+
+        // Viewer Document Selector
+        function selectDocument(id) {
+            const doc = documents.find(d => d.id === id) || documents[0];
+            selectedDocId = doc.id;
+
+            document.getElementById('view-doc-title').textContent = doc.title;
+            document.getElementById('view-doc-category').textContent = doc.category;
+            document.getElementById('view-doc-version').textContent = doc.version;
+            document.getElementById('view-doc-author').textContent = `Responsable: ${doc.author} (${doc.date})`;
+            document.getElementById('view-doc-body').textContent = doc.content;
+        }
+
+        // Viewer Internal Sub-Tab Switcher
+        function switchViewerSubTab(type) {
+            const docTab = document.getElementById('viewer-subtab-doc');
+            const flowTab = document.getElementById('viewer-subtab-flow');
+            const btnDoc = document.getElementById('subtab-btn-doc');
+            const btnFlow = document.getElementById('subtab-btn-flow');
+
+            if (type === 'doc') {
+                docTab.classList.remove('hidden');
+                flowTab.classList.add('hidden');
+                btnDoc.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-certus-blue text-white shadow";
+                btnFlow.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300";
+            } else {
+                docTab.classList.add('hidden');
+                flowTab.classList.remove('hidden');
+                btnFlow.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-certus-blue text-white shadow";
+                btnDoc.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300";
+            }
+        }
+
+        // Render Versions Table
+        function renderVersions() {
+            const tbody = document.getElementById('versions-table-body');
+            tbody.innerHTML = '';
+
+            documents.forEach(doc => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50";
+                tr.innerHTML = `
+                    <td class="p-3.5 font-bold text-gray-800">${doc.title}</td>
+                    <td class="p-3.5 font-mono text-certus-blue font-bold">${doc.version}</td>
+                    <td class="p-3.5 text-gray-500">${doc.date}</td>
+                    <td class="p-3.5 text-gray-700">${doc.author}</td>
+                    <td class="p-3.5 text-gray-600">Registro y actualización oficial del procedimiento de TI CERTUS.</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Delete Document (Admin)
+        function deleteDoc(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar este documento del repositorio?')) {
+                documents = documents.filter(d => d.id !== id);
+                document.getElementById('stat-total').textContent = documents.length;
+                applyFilters();
+                renderVersions();
+            }
+        }
+
+        
+    </script>
+</body>
+</html>
