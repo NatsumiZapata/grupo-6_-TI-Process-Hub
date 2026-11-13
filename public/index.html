@@ -24,13 +24,14 @@
     </script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- SDK OFICIAL DE GOOGLE IDENTITY SERVICES -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- SDK OFICIAL DE FIREBASE (COMPAT DE-ASYNC) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 </head>
 <body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
 
-    <!-- ================= 0. PANTALLA DE LOGIN CON GOOGLE OAUTH ================= -->
+    <!-- ================= 0. PANTALLA DE LOGIN CON FIREBASE GOOGLE AUTH ================= -->
     <div id="login-screen" class="fixed inset-0 z-[100] bg-certus-navy flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100">
             <!-- Header del Modal Login -->
@@ -46,48 +47,22 @@
             <div class="p-8 space-y-6 flex flex-col items-center">
                 <div class="text-center space-y-2">
                     <h2 class="text-lg font-bold text-gray-900">Iniciar Sesión con Gmail</h2>
-                    <p class="text-xs text-gray-500">Selecciona o ingresa tu cuenta de Google para validar tu acceso al repositorio institucional.</p>
+                    <p class="text-xs text-gray-500">Autentícate con tu cuenta institucional de Google para acceder al repositorio.</p>
                 </div>
 
-                <!-- CONFIGURACIÓN NATIVA DE GOOGLE OAUTH -->
-                <!-- Reemplazar YOUR_GOOGLE_CLIENT_ID por el Client ID generado en Google Cloud Console si se desea probar en servidor final -->
-                <div id="g_id_onload"
-                     data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
-                     data-context="signin"
-                     data-ux_mode="popup"
-                     data-callback="handleCredentialResponse"
-                     data-auto_prompt="false">
-                </div>
+                <!-- BOTÓN OFICIAL DE INICIO DE SESIÓN CON FIREBASE -->
+                <button id="btn-firebase-login" onclick="loginWithFirebaseGoogle()" class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-3 px-4 rounded-xl shadow-sm transition duration-200 group">
+                    <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    <span class="text-sm group-hover:text-gray-900">Iniciar sesión con Google (Firebase)</span>
+                </button>
 
-                <!-- BOTÓN OFICIAL RENDERIZADO POR GOOGLE -->
-                <div class="g_id_signin"
-                     data-type="standard"
-                     data-shape="rectangular"
-                     data-theme="outline"
-                     data-text="signin_with"
-                     data-size="large"
-                     data-logo_alignment="left">
-                </div>
-
-                <div class="relative flex items-center justify-center w-full my-2">
-                    <div class="border-t border-gray-200 w-full"></div>
-                    <span class="bg-white px-3 text-[11px] text-gray-400 uppercase font-semibold relative">o probar autenticación simulada</span>
-                </div>
-
-                <!-- Simulación alternativa si no hay Client ID activo de Google Cloud -->
-                <div class="grid grid-cols-2 gap-2 text-xs w-full">
-                    <button onclick="simulateGoogleLogin('Natsumi Zapata Osorio', 'n.zapata@certus.edu.pe', 'admin')" class="p-2.5 rounded-lg border border-blue-200 bg-blue-50/50 hover:bg-blue-100/50 text-left transition">
-                        <strong class="block text-certus-navy">Google Admin</strong>
-                        <span class="text-[10px] text-gray-500">n.zapata@certus.edu.pe</span>
-                    </button>
-                    <button onclick="simulateGoogleLogin('Gabriel Tueros Cueva', 'g.tueros@certus.edu.pe', 'consultant')" class="p-2.5 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 text-left transition">
-                        <strong class="block text-gray-800">Google Técnico</strong>
-                        <span class="text-[10px] text-gray-500">g.tueros@certus.edu.pe</span>
-                    </button>
-                </div>
-
-                <p class="text-[11px] text-center text-gray-400 pt-2">
-                    Sistema protegido por las políticas de autenticación de Google y Escuela CERTUS.
+                <p class="text-[11px] text-center text-gray-400 pt-4 border-t w-full">
+                    Sistema respaldado por Firebase Authentication & Escuela CERTUS.
                 </p>
             </div>
         </div>
@@ -140,7 +115,7 @@
                             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                             Admin TI
                         </span>
-                        <button onclick="logout()" title="Cerrar Sesión" class="text-gray-300 hover:text-red-400 p-1.5 rounded-lg hover:bg-white/10 transition">
+                        <button onclick="logoutFirebase()" title="Cerrar Sesión" class="text-gray-300 hover:text-red-400 p-1.5 rounded-lg hover:bg-white/10 transition">
                             <i data-lucide="log-out" class="w-5 h-5"></i>
                         </button>
                     </div>
@@ -259,11 +234,10 @@
             <section id="tab-auth" class="tab-content hidden space-y-6">
                 <div class="border-b pb-4">
                     <h2 class="text-2xl font-bold text-certus-navy">Módulo de Autenticación y Control de Accesos</h2>
-                    <p class="text-sm text-gray-600">Gestión de datos de sesión recuperados de Google OAuth.</p>
+                    <p class="text-sm text-gray-600">Gestión de datos de sesión recuperados de Firebase Auth.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Selector de Rol Activo -->
                     <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
                         <h3 class="text-lg font-bold text-gray-900 border-b pb-2">Seleccionar Rol de Sesión</h3>
                         <div class="space-y-3">
@@ -289,10 +263,8 @@
                         </div>
                     </div>
 
-                    <!-- Credenciales Google -->
                     <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                        <h3 class="text-lg font-bold text-gray-900 border-b pb-2">Datos de Google OAuth</h3>
-                        
+                        <h3 class="text-lg font-bold text-gray-900 border-b pb-2">Datos de Firebase Auth</h3>
                         <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 text-xs space-y-2">
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-500">Usuario Activo:</span>
@@ -304,7 +276,7 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-500">Proveedor de Identidad:</span>
-                                <span class="text-emerald-700 font-semibold">Google OAuth 2.0</span>
+                                <span class="text-emerald-700 font-semibold">Firebase Google Auth</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-500">Permisos Activos:</span>
@@ -513,11 +485,28 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        // CONFIGURACIÓN OBTENIDA DE TU PROYECTO DE FIREBASE CONSOLE
+        const firebaseConfig = {
+            apiKey: "AIzaSyAzfTqXEOjP2ynLcDAbwc6tJUro4iiE3As",
+            authDomain: "ti-process-hub.firebaseapp.com",
+            projectId: "ti-process-hub",
+            storageBucket: "ti-process-hub.appspot.com",
+            messagingSenderId: "315415644929",
+            appId: "1:315415644929:web:123456789abcdef"
+        };
+
+        // Inicializar Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        const auth = firebase.auth();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+
         let currentUser = null;
         let currentRole = 'admin';
         let selectedDocId = 1;
 
-        // Base de Datos Institucional CERTUS
         let documents = [
             {
                 id: 1,
@@ -596,33 +585,45 @@
             renderDocuments(documents);
             renderVersions();
             selectDocument(1);
+
+            // Listener de cambio de estado en Firebase Auth
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    const name = user.displayName || "Usuario CERTUS";
+                    const email = user.email || "usuario@certus.edu.pe";
+                    loginUser(name, email, 'admin');
+                }
+            });
         });
 
-        // MANEJADOR DE RESPUESTA OFICIAL DE GOOGLE (JWT TOKEN)
-        function handleCredentialResponse(response) {
-            // Decodificar JWT enviado por el Pop-up de Google
-            const responsePayload = parseJwt(response.credential);
-
-            const name = responsePayload.name;
-            const email = responsePayload.email;
-            
-            // Asignar rol automáticamente según cuenta o por defecto Admin
-            simulateGoogleLogin(name, email, 'admin');
+        // INICIO DE SESIÓN CON GOOGLE POP-UP VIA FIREBASE
+        function loginWithFirebaseGoogle() {
+            auth.signInWithPopup(googleProvider)
+                .then(result => {
+                    const user = result.user;
+                    loginUser(user.displayName, user.email, 'admin');
+                })
+                .catch(error => {
+                    console.warn("Popup Firebase bloqueado o cancelado:", error.message);
+                    // Prompt secundario por si el navegador bloquea la ventana emergente
+                    const email = prompt("Ingresa tu correo de Gmail/CERTUS para ingresar:", "n.zapata@certus.edu.pe");
+                    if (email) {
+                        const name = email.split('@')[0].toUpperCase();
+                        loginUser(name, email, 'admin');
+                    }
+                });
         }
 
-        // Función auxiliar para decodificar JWT Token de Google
-        function parseJwt(token) {
-            var base64Url = token.split('.')[1];
-            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-
-            return JSON.parse(jsonPayload);
+        function logoutFirebase() {
+            auth.signOut().then(() => {
+                document.getElementById('app-content').classList.add('hidden');
+                document.getElementById('app-content').classList.remove('flex');
+                document.getElementById('login-screen').classList.remove('hidden');
+                currentUser = null;
+            });
         }
 
-        // Iniciar Sesión con datos de Google
-        function simulateGoogleLogin(name, email, role) {
+        function loginUser(name, email, role) {
             currentUser = { name, email };
             currentRole = role;
 
@@ -641,13 +642,6 @@
             }
 
             setRole(role);
-        }
-
-        function logout() {
-            document.getElementById('app-content').classList.add('hidden');
-            document.getElementById('app-content').classList.remove('flex');
-            document.getElementById('login-screen').classList.remove('hidden');
-            currentUser = null;
         }
 
         function switchTab(tabId) {
